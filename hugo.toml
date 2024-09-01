@@ -1,0 +1,54 @@
+baseURL = "https://example.com"
+languageCode = "zh-CN"
+title = "毛线的博客"
+theme = "archie"
+copyright = "© Wool"
+pygmentsstyle = "monokai"
+pygmentscodefences = true
+pygmentscodefencesguesssyntax = true
+
+
+[params]
+mode = "toggle"
+useCDN = false
+subtitle = "写点什么呢"
+
+[[params.social]]
+name = "GitHub"
+icon = "github"
+url = "https://github.com/bitwool"
+
+# [[params.social]]
+# name = "Twitter"
+# icon = "twitter"
+# url = "https://twitter.com/athulcajay/"
+
+# [[params.social]]
+# name = "GitLab"
+# icon = "gitlab"
+# url = "https://gitlab.com/athul/"
+
+[[menu.main]]
+name = "Home"
+url = "/"
+weight = 1
+
+[[menu.main]]
+name = "Posts"
+url = "/posts"
+weight = 2
+
+[[menu.main]]
+name = "About"
+url = "/about"
+weight = 3
+
+[[menu.main]]
+name = "Tags"
+url = "/tags"
+weight = 4
+
+# [[menu.main]]
+# name = "Projects"
+# url = "/projects"
+# weight = 4
