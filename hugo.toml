@@ -1,6 +1,6 @@
 baseURL = "https://example.com"
 languageCode = "zh-CN"
-title = "毛线的博客"
+title = "Wool's Blog"
 theme = "archie"
 copyright = "© Wool"
 pygmentsstyle = "monokai"
