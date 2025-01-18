@@ -5,9 +5,11 @@ author        = "bitwool"
 description   = "A simple site generator"
 license       = "MIT"
 srcDir        = "src"
-bin           = @["site"]
+bin           = @["ngen"]
 
 
 # Dependencies
 
 requires "nim >= 2.2.0"
+requires "markdown"
+requires "nimja"

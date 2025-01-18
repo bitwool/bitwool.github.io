@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>bitwool's blog</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    {% for post in posts %}
+    <a href="{{post.href}}"> {{post.title}}</a>
+    {% endfor %}
+</body>
+</html>
+
