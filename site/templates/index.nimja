@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>bitwool's blog</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     {% for post in posts %}

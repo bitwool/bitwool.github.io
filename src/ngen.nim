@@ -103,5 +103,6 @@ when isMainModule:
   for post in posts:
     saveHtml(post.path, renderPost(post))
   saveHtml("./dist/index.html", renderIndex(posts))
+  cpCss()
   
 
