@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试博客</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <h1>测试博客</h1>
+    <p>2025-01-08T17 </p>
+
+    
+    tag1 
+    
+    tag2 
+    
+
+    <h2>golang</h2>
+<p>依赖库：https://github.com/urfave/cli</p>
+<p>项目初始化过程</p>
+<pre><code class="language-bash">mkdir cli-app
+cd cli-app 
+go mod init cli-app
+go get github.com/urfave/cli/v3
+touch main.go
+go build .
+./cli-app
+</code></pre>
+<p>main.go</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;context&quot;
+    &quot;fmt&quot;
+    &quot;log&quot;
+    &quot;os&quot;
+
+    &quot;github.com/urfave/cli/v3&quot;
+)
+
+func main() {
+    cmd := &amp;cli.Command{
+        Name:  &quot;boom&quot;,
+        Usage: &quot;make an explosive entrance&quot;,
+        Action: func(context.Context, *cli.Command) error {
+            fmt.Println(&quot;boom! I say!&quot;)
+            return nil
+        },
+    }
+
+    if err := cmd.Run(context.Background(), os.Args); err != nil {
+        log.Fatal(err)
+    }
+}	
+</code></pre>
+<h2>ocaml</h2>
+<ul>
+<li>依赖库：https://erratique.ch/software/cmdliner</li>
+<li>使用方法 https://github.com/mjambon/cmdliner-cheatsheet</li>
+</ul>
+
+</body>
+</html>
