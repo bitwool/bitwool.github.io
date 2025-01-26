@@ -96,7 +96,8 @@ proc saveHtml(path: string, content: string) =
 proc cpCss() =
   let src = "./site/style.css"
   let dst = "./dist/style.css"
-  copyFile(src, dst)
+  copyFile("./site/style.css", "./dist/style.css")
+  copyFile("./site/bootstrap.min.css", "./dist/bootstrap.min.css")
 
 when isMainModule:
   let posts = parse_posts()

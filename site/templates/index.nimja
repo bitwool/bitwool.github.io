@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>bitwool's blog</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+    <h1>bitwool's blog</h1>
     {% for post in posts %}
     <a href="{{post.href}}"> {{post.title}}</a>
+    <p>{{post.date}}</p>
     {% endfor %}
 </body>
 </html>
