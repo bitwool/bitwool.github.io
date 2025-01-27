@@ -1,17 +1,68 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>bitwool's blog</title>
-    <link rel="stylesheet" href="./bootstrap.min.css">
-    <link rel="stylesheet" href="./style.css">
-</head>
-<body>
-    <h1>bitwool's blog</h1>
-    {% for post in posts %}
-    <a href="{{post.href}}"> {{post.title}}</a>
-    <p>{{post.date}}</p>
-    {% endfor %}
-</body>
-</html>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/style.css">
+    <style>
+        .card-title a {
+            color: #333;
+        }
 
+        .card-title a:hover {
+            color: #666;
+        }
+
+        /* 添加导航栏链接样式 */
+        .navbar-brand {
+            color: #333;
+        }
+
+        .navbar-brand:hover {
+            color: #666;
+        }
+
+        /* 添加容器对齐样式 */
+        .container {
+            margin-left: 0;
+            padding-left: 2rem;
+        }
+
+        /* 移除文章列表的自动居中 */
+        .col-lg-8.mx-auto {
+            margin-left: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/dist">bitwool's blog</a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                {% for post in posts %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <span class="text-muted small" style="min-width: 120px;">{{post.date}}</span>
+                            <h2 class="card-title h5 mb-0">
+                                <a href="{{post.href}}" class="text-decoration-none">{{post.title}}</a>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -13,3 +13,9 @@ bin           = @["ngen"]
 requires "nim >= 2.2.0"
 requires "markdown"
 requires "nimja"
+
+
+# Tasks
+task run, "Build and run ngen":
+  exec "nimble build"
+  exec "./ngen"

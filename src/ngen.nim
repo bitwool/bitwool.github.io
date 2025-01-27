@@ -38,7 +38,7 @@ proc parse_metadata(metadata: string):(string, string, seq[string]) =
   let lines = metadata.split('\n')
   var title = ""
   var date = ""
-  var tags= @[""]
+  var tags = @[""]
   for line in lines:
     let parts = line.split(':')
     case parts[0].strip():
@@ -82,28 +82,24 @@ proc parse_posts(): seq[Post] =
     echo "无法访问posts目录: " & getCurrentExceptionMsg()
 
 proc renderPost(post: Post): string =
-  # compileTemplateFile 会编译模板文件并注入变量
   compileTemplateFile("./site/templates/post.nimja", baseDir = getScriptDir() / ".." )
 
 proc renderIndex(posts: seq[Post]): string =
-  # compileTemplateFile 会编译模板文件并注入变量
   compileTemplateFile("./site/templates/index.nimja", baseDir = getScriptDir() / ".." )
 
 proc saveHtml(path: string, content: string) =
   createDir(parentDir(path))
   writeFile(path, content)
 
-proc cpCss() =
-  let src = "./site/style.css"
-  let dst = "./dist/style.css"
-  copyFile("./site/style.css", "./dist/style.css")
-  copyFile("./site/bootstrap.min.css", "./dist/bootstrap.min.css")
+proc cpStatic() =
+  let sourceDir = "./site/static"
+  let targetDir = "./dist/static"
+  copyDir(sourceDir, targetDir)
+  
 
 when isMainModule:
   let posts = parse_posts()
   for post in posts:
     saveHtml(post.path, renderPost(post))
   saveHtml("./dist/index.html", renderIndex(posts))
-  cpCss()
-  
-
+  cpStatic()

@@ -1,2 +1,5 @@
 dist/*
 ngen
+nimble.develop
+nimble.paths
+.DS_Store

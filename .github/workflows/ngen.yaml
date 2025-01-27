@@ -18,10 +18,8 @@ jobs:
       with:
         # nim-version: '2.0.0'
         repo-token: ${{ secrets.GH_PAT }}
-    - name: Build ngen
-      run: nimble build -Y
-    - name: Generate site
-      run: ./ngen
+    - name: Nimble Run
+      run: nimble run
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v4
       with:
