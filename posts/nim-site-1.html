@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>使用nim编写静态博客生成器</title>
+    
+    <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.0/css/catppuccin-latte.css">
+
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/styles/default.min.css" />
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/languages/nim.min.js"></script>
+
+    <script>
+        hljs.highlightAll();
+    </script>
+    <style>
+        .tag {
+            display: inline-block;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 0.2em 0.5em;
+            margin: 0.2em;
+            border-radius: 0.3em;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-4">
+        <!-- 添加返回首页的链接，并与文章内容分开 -->
+        <div class="back-link-container">
+            <a href="/dist/index.html" class="back-link">返回首页</a>
+        </div>
+
+        <h1>使用nim编写静态博客生成器</h1>
+        <p>2025-01-08 </p>
+
+        
+        <span class="tag">nim</span>
+        
+
+        <p>2024 年一直在折腾不同的语言，尝试了很多种最终都半途而废。在折腾过程中了解到了 Nim 语言。Nim 官网对自己的定位是高效、优雅、复有表现力。经过初步学习后，使用 Nim 把自己工作中的一个小工具重写了一遍，写起来还是很舒服。写完之后，不知道写啥好，干脆写个博客吧。一个是提升 Nim 的熟练度，另外一个以为契机开始写博客，提升内容输出的能力。毕竟搭建从未停止，写作从未开始。</p>
+<h2>设计思路</h2>
+<p>第一步只实现最简单的功能</p>
+<ul>
+<li>扫描博客文档目录，把 markdown 文件转成静态 html 页面，并且解析博客元信息</li>
+<li>汇总博客元信息以及内容 html，填充到定义好的模板文件中</li>
+</ul>
+<h2>实现过程</h2>
+<h3>安装依赖</h3>
+<p>该项目中主要用到两个核心依赖</p>
+<ul>
+<li>markdown 把 markdown 文件转换为 html</li>
+<li>nimja Nim 语言中一个类似 jinja 的模板引擎</li>
+</ul>
+<pre><code class="language-shell">nimble install markdown
+nimble install nimja
+</code></pre>
+<p>ngen.nimble</p>
+<pre><code class="language-nim">requires &quot;markdown&quot;
+requires &quot;nimja&quot;
+</code></pre>
+<h3>markdown文档解析</h3>
+<p>Nim 的 markdown 库不支持对元信息的解析，这里采用的方法是：</p>
+<ol>
+<li>使用正则表达式把markdown文件分为两部分，元信息使用<code>+++</code>包围的部分，剩下的markdown部分作为博客的正文</li>
+<li>元信息使用简单的键值对来表示，对于tags这种需要支持多值的类型，使用逗号拼接</li>
+<li>正文部分则比较简单，直接使用markdown解析为html即可</li>
+</ol>
+<p>首先是对文章的结构定义</p>
+<pre><code class="language-nim">type
+  Post = object
+    path: string
+    href: string
+    title: string
+    date: string
+    tags: seq[string]
+    content: string
+</code></pre>
+<p>markdown拆分</p>
+<pre><code class="language-nim">proc split_post(filepath: string): (string, string) =
+  let fileContent = readFile(filepath)
+  let re = re&quot;(?s)^\+\+\+\n(.*?)\n\+\+\+\n(.*)&quot;
+  var matches: array[2, string]
+  if match(fileContent, re, matches):
+    (matches[0], matches[1])
+  else:
+    (&quot;&quot;, fileContent)
+</code></pre>
+<p>元信息解析</p>
+<pre><code class="language-nim">proc parse_metadata(metadata: string):(string, string, seq[string]) = 
+  let lines = metadata.split('\n')
+  var title = &quot;&quot;
+  var date = &quot;&quot;
+  var tags = @[&quot;&quot;]
+  for line in lines:
+    let parts = line.split(':')
+    case parts[0].strip():
+    of &quot;title&quot;:
+      title = parts[1].strip()
+    of &quot;date&quot;:
+      date = parts[1].strip()
+    of &quot;tags&quot;:
+      tags = parts[1].strip().split(',')
+  (title, date, tags)
+</code></pre>
+<p>markdown解析直接调用<code>markdown()</code>即可，不需要单独封装函数，合并到posts解析部分</p>
+<pre><code class="language-nim">type
+  Post = object
+    path: string
+    href: string
+    title: string
+    date: string
+    tags: seq[string]
+    content: string
+
+proc parse_posts(): seq[Post] = 
+  result = @[]
+  for file in walkDir(&quot;./site/posts&quot;):
+    let path = file.path
+    let htmlPath = mdPathToHtmlPath(path)
+    let (metadata, content) = split_post(path)
+    let (title, date, tags) = parse_metadata(metadata)
+    var post = Post(
+      path: htmlPath,
+      href: htmlpath[5 .. ^1],
+      title: title,
+      date: date,
+      tags: tags,
+      content: markdown(content)
+    )
+    result.add(post)
+</code></pre>
+<h3>模板渲染</h3>
+<p>解析之后得到了<code>posts</code>数组，接下来把解析到的结果渲染到模板，再保存为html即可。按照最简功能设计，只需要主页index和文章页post的模板</p>
+<p>主页模板</p>
+<pre><code class="language-html">&lt;body&gt;
+    {% for post in posts %}
+    &lt;a href=&quot;{{post.href}}&quot;&gt; {{post.title}}&lt;/a&gt;
+    {% endfor %}
+&lt;/body&gt;
+</code></pre>
+<p>文章模板</p>
+<pre><code class="language-html">
+&lt;body&gt;
+    &lt;h1&gt;{{post.title}}&lt;/h1&gt;
+    &lt;p&gt;{{post.date}} &lt;/p&gt;
+
+    {% for tag in post.tags %}
+    {{tag}} 
+    {% endfor %}
+
+    {{post.content}}
+&lt;/body&gt;
+</code></pre>
+<p>模板渲染使用<code>nimja</code>库中的<code>compileTemplateFile</code>,这是一个宏，可以对模板文件编译，并且注入变量</p>
+<pre><code class="language-nim">proc renderPost(post: Post): string =
+  compileTemplateFile(&quot;./site/templates/post.nimja&quot;, baseDir = getScriptDir() / &quot;..&quot; )
+
+proc renderIndex(posts: seq[Post]): string =
+  compileTemplateFile(&quot;./site/templates/index.nimja&quot;, baseDir = getScriptDir() / &quot;..&quot; )
+</code></pre>
+<h3>其他</h3>
+<ul>
+<li>文章忽略了保存为html文件以及static资源复制的部分，这些逻辑比较简单，不在文件中列出</li>
+<li>关于博客样式，借助大模型和bootstrap生成了一个勉强能看的版本，后续再做优化</li>
+<li>代码高亮用到<a href="https://highlightjs.org/">highlightjs</a>库，配色方案使用<a href="https://github.com/catppuccin/highlightjs">catppuccin/highlightjs</a>中的<code>Latte</code></li>
+</ul>
+<h2>部署</h2>
+<p>部署选择了Github Pages方案，通过Github Action实现自动部署</p>
+<pre><code class="language-yaml">name: Deploy site to Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install libpcre
+      run: sudo apt-get install libpcre3-dev libpcre3
+    - name: Setup Nim
+      uses: jiro4989/setup-nim-action@v2
+      with:
+        # nim-version: '2.0.0'
+        repo-token: ${{ secrets.GH_PAT }}
+    - name: Nimble Run
+      run: nimble run
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GH_PAT }}
+        publish_dir: ./dist
+</code></pre>
+<h2>总结</h2>
+<p>以上实现的功能很简单，nim写起来也很舒服，后续会继续对这个生成器进行优化，完成功能。对于一些实现相对负责的功能，也会继续写博客来分享。</p>
+
+    </div>
+</body>
+
+</html>
