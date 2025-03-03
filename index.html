@@ -1,68 +1,44 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>bitwool's blog</title>
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./static/style.css">
-    <style>
-        .card-title a {
-            color: #333;
-        }
+    <link rel="stylesheet" href="./static/style.css" />
+  </head>
 
-        .card-title a:hover {
-            color: #666;
-        }
-
-        /* 添加导航栏链接样式 */
-        .navbar-brand {
-            color: #333;
-        }
-
-        .navbar-brand:hover {
-            color: #666;
-        }
-
-        /* 添加容器对齐样式 */
-        .container {
-            margin-left: 0;
-            padding-left: 2rem;
-        }
-
-        /* 移除文章列表的自动居中 */
-        .col-lg-8.mx-auto {
-            margin-left: 0 !important;
-        }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="/dist">bitwool's blog</a>
-        </div>
+  <body>
+    <nav class="navbar">
+      <div class="container">
+        <a class="navbar-brand" href="./index.html">bitwool's blog</a>
+      </div>
     </nav>
 
-    <div class="container py-4">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <span class="text-muted small" style="min-width: 120px;">2025-01-08</span>
-                            <h2 class="card-title h5 mb-0">
-                                <a href="posts/nim-site-1.html" class="text-decoration-none">使用nim编写静态博客生成器</a>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </div>
-</body>
+    <div class="container">
+      <div class="posts-list">
+        
+        <article class="card mb-4">
+          <div class="card-body">
+            <div class="post-item">
+              <div class="post-header">
+                <span class="card-date">2025-01-08</span>
+                <a href="./posts/nim-site-1.html" class="card-title"
+                  >使用nim编写静态博客生成器</a
+                >
+              </div>
 
+              
+              <div class="post-tags">
+                
+                <span class="tag">nim</span>
+                
+              </div>
+              
+            </div>
+          </div>
+        </article>
+        
+      </div>
+    </div>
+  </body>
 </html>
