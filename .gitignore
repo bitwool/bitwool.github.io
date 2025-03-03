@@ -1,5 +1,3 @@
-dist/*
-ngen
-nimble.develop
-nimble.paths
+/target
+/dist
 .DS_Store

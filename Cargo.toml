@@ -1,0 +1,10 @@
+[package]
+name = "biwool-site"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+markdown = "0.3"
+tera = "1.0"
+toml = "0.5"
+serde = { version = "1.0", features = ["derive"] }
